@@ -1,24 +1,32 @@
-'use client';
+"use client";
 
+// import { SellProduct, type State } from "@/app/actions";
 import {
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { type JSONContent } from '@tiptap/react';
-import { redirect } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
-import { toast } from 'sonner';
-import { SelectCategory } from '../SelectCategory';
-import { Textarea } from '@/components/ui/textarea';
-import { TipTapEditor } from '../Editor';
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { type JSONContent } from "@tiptap/react";
+import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
+import { SelectCategory } from "../SelectCategory";
+import { Textarea } from "@/components/ui/textarea";
+import { TipTapEditor } from "../Editor";
+import { UploadDropzone } from "@/app/lib/uploadthing";
+// import { Submitbutton } from "../SubmitButtons";
 
 export function SellForm() {
+	// const initalState: State = { message: '', status: undefined };
+	// const [state, formAction] = useFormState(SellProduct, initalState);
+	const [json, setJson] = useState<null | JSONContent>(null);
+	const [images, setImages] = useState<null | string[]>(null);
+	const [productFile, SetProductFile] = useState<null | string>(null);
 	return (
 		<CardHeader>
 			<CardTitle>Sell your product with ease</CardTitle>
@@ -62,6 +70,55 @@ export function SellForm() {
 					<input type='hidden' name='description' value={''} />
 					<Label>Description</Label>
 					<TipTapEditor setJson={() => {}} json={null} />
+					<div className='flex flex-col gap-y-2'>
+						<input
+							type='hidden'
+							name='images'
+							value={JSON.stringify(images)}
+						/>
+						<Label>Product Images</Label>
+						<UploadDropzone
+							endpoint='imageUploader'
+							onClientUploadComplete={(res) => {
+								setImages(res.map((item) => item.url));
+								toast.success('Your images have been uploaded!');
+							}}
+							onUploadError={(error: Error) => {
+								toast.error('Something went wrong, try again');
+							}}
+						/>
+						{/* {state?.errors?.['images']?.[0] && (
+							<p className='text-destructive'>
+								{state?.errors?.['images']?.[0]}
+							</p>
+						)} */}
+					</div>
+
+					<div className='flex flex-col gap-y-2'>
+						<input
+							type='hidden'
+							name='productFile'
+							value={productFile ?? ''}
+						/>
+						<Label>Product File</Label>
+						<UploadDropzone
+							onClientUploadComplete={(res) => {
+								SetProductFile(res[0].url);
+								toast.success(
+									'Your Product file has been uploaded!'
+								);
+							}}
+							endpoint='productFileUpload'
+							onUploadError={(error: Error) => {
+								toast.error('Something went wrong, try again');
+							}}
+						/>
+						{/* {state?.errors?.['productFile']?.[0] && (
+							<p className='text-destructive'>
+								{state?.errors?.['productFile']?.[0]}
+							</p>
+						)} */}
+					</div>
 				</div>
 			</CardContent>
 		</CardHeader>
