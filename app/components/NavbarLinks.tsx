@@ -1,9 +1,31 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { navbarLinks } from '@/lib/navigationData';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+export const navbarLinks = [
+	{
+		id: 0,
+		name: 'Home',
+		href: '/',
+	},
+	{
+		id: 1,
+		name: 'Templates',
+		href: '/products/template',
+	},
+	{
+		id: 2,
+		name: 'Ui Kits',
+		href: '/products/uikit',
+	},
+	{
+		id: 3,
+		name: 'Icons',
+		href: '/products/icon',
+	},
+];
 
 export function NavbarLinks() {
 	const location = usePathname();

@@ -17,7 +17,7 @@ export async function Navbar() {
 			<div className='md:col-span-3'>
 				<Link href='/'>
 					<h1 className='text-2xl font-semibold '>
-						Marshal<span className='text-primary'>UI</span>
+						Digital<span className='text-primary'>Marketplace</span>
 					</h1>
 				</Link>
 			</div>
@@ -26,7 +26,14 @@ export async function Navbar() {
 
 			<div className='flex items-center gap-x-2 ms-auto md:col-span-3'>
 				{user ? (
-					<UserNav />
+					<UserNav
+						email={user.email as string}
+						name={user.given_name as string}
+						userImage={
+							user.picture ??
+							`https://avatar.vercel.sh/${user.given_name}`
+						}
+					/>
 				) : (
 					<div className='flex items-center gap-x-2'>
 						<Button asChild>
