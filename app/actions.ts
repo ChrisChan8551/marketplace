@@ -1,3 +1,4 @@
+"use server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ZodStringDef, z } from "zod";
 import prisma from "./lib/db";

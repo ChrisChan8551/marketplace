@@ -1,6 +1,5 @@
 'use client';
 
-// import { SellProduct, type State } from "@/app/actions";
 import {
 	CardContent,
 	CardDescription,
@@ -29,6 +28,7 @@ export function SellForm() {
 	const [json, setJson] = useState<null | JSONContent>(null);
 	const [images, setImages] = useState<null | string[]>(null);
 	const [productFile, SetProductFile] = useState<null | string>(null);
+
 	return (
 		<form action={formAction}>
 			<CardHeader>
@@ -44,12 +44,23 @@ export function SellForm() {
 					name='name'
 					type='text'
 					placeholder='Name of your Product'
-					required
+					// required
 					minLength={3}
 				/>
+				{state?.errors?.['name']?.[0] && (
+					<p className='text-destructive'>
+						{state?.errors?.['name']?.[0]}
+					</p>
+				)}
+
 				<div className='flex flex-col gap-y-2'>
 					<Label>Category</Label>
 					<SelectCategory />
+					{state?.errors?.['category']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['category']?.[0]}
+						</p>
+					)}
 				</div>
 				<div className='flex flex-col gap-y-2'>
 					<Label>Price</Label>
@@ -57,23 +68,38 @@ export function SellForm() {
 						placeholder='29$'
 						type='number'
 						name='price'
-						required
+						// required
 						min={1}
 					/>
+					{state?.errors?.['price']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['price']?.[0]}
+						</p>
+					)}
 				</div>
 				<div className='flex flex-col gap-y-2'>
 					<Label>Small Summary</Label>
 					<Textarea
 						name='smallDescription'
 						placeholder='Please describe your product shortly right here...'
-						required
+						// required
 						minLength={10}
 					/>
+					{state?.errors?.['smallDescription']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['smallDescription']?.[0]}
+						</p>
+					)}
 				</div>
 				<div className='flex flex-col gap-y-2'>
 					<input type='hidden' name='description' value={''} />
 					<Label>Description</Label>
 					<TipTapEditor json={json} setJson={setJson} />
+					{state?.errors?.['description']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['description']?.[0]}
+						</p>
+					)}
 					<div className='flex flex-col gap-y-2'>
 						<input
 							type='hidden'
@@ -93,11 +119,11 @@ export function SellForm() {
 								toast.error(`${error}`);
 							}}
 						/>
-						{/* {state?.errors?.['images']?.[0] && (
+						{state?.errors?.['images']?.[0] && (
 							<p className='text-destructive'>
 								{state?.errors?.['images']?.[0]}
 							</p>
-						)} */}
+						)}
 					</div>
 
 					<div className='flex flex-col gap-y-2'>
@@ -119,11 +145,11 @@ export function SellForm() {
 								toast.error(`${error}`);
 							}}
 						/>
-						{/* {state?.errors?.['productFile']?.[0] && (
+						{state?.errors?.['productFile']?.[0] && (
 							<p className='text-destructive'>
 								{state?.errors?.['productFile']?.[0]}
 							</p>
-						)} */}
+						)}
 					</div>
 				</div>
 			</CardContent>
