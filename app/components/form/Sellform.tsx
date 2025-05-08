@@ -1,39 +1,43 @@
-"use client";
+'use client';
 
 // import { SellProduct, type State } from "@/app/actions";
 import {
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { type JSONContent } from "@tiptap/react";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useFormState } from "react-dom";
-import { toast } from "sonner";
-import { SelectCategory } from "../SelectCategory";
-import { Textarea } from "@/components/ui/textarea";
-import { TipTapEditor } from "../Editor";
-import { UploadDropzone } from "@/app/lib/uploadthing";
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { type JSONContent } from '@tiptap/react';
+import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
+import { toast } from 'sonner';
+import { SelectCategory } from '../SelectCategory';
+import { Textarea } from '@/components/ui/textarea';
+import { TipTapEditor } from '../Editor';
+import { UploadDropzone } from '@/app/lib/uploadthing';
+import { SellProduct, State } from '@/app/actions';
+import { Button } from '@/components/ui/button';
 // import { Submitbutton } from "../SubmitButtons";
 
 export function SellForm() {
-	// const initalState: State = { message: '', status: undefined };
-	// const [state, formAction] = useFormState(SellProduct, initalState);
+	const initalState: State = { message: '', status: undefined };
+	const [state, formAction] = useFormState(SellProduct, initalState);
 	const [json, setJson] = useState<null | JSONContent>(null);
 	const [images, setImages] = useState<null | string[]>(null);
 	const [productFile, SetProductFile] = useState<null | string>(null);
 	return (
-		<CardHeader>
-			<CardTitle>Sell your product with ease</CardTitle>
-			<CardDescription>
-				Please describe your product here in detail so that it can be
-				sold
-			</CardDescription>
+		<form action={formAction}>
+			<CardHeader>
+				<CardTitle>Sell your product with ease</CardTitle>
+				<CardDescription>
+					Please describe your product here in detail so that it can
+					be sold
+				</CardDescription>
+			</CardHeader>
 			<CardContent className='flex flex-col gap-y-10'>
 				<Label>Name</Label>
 				<Input
@@ -61,7 +65,7 @@ export function SellForm() {
 					<Label>Small Summary</Label>
 					<Textarea
 						name='smallDescription'
-						placeholder='Pleae describe your product shortly right here...'
+						placeholder='Please describe your product shortly right here...'
 						required
 						minLength={10}
 					/>
@@ -69,7 +73,7 @@ export function SellForm() {
 				<div className='flex flex-col gap-y-2'>
 					<input type='hidden' name='description' value={''} />
 					<Label>Description</Label>
-					<TipTapEditor setJson={() => {}} json={null} />
+					<TipTapEditor json={json} setJson={setJson} />
 					<div className='flex flex-col gap-y-2'>
 						<input
 							type='hidden'
@@ -81,10 +85,12 @@ export function SellForm() {
 							endpoint='imageUploader'
 							onClientUploadComplete={(res) => {
 								setImages(res.map((item) => item.url));
-								toast.success('Your images have been uploaded!');
+								toast.success(
+									'Your images have been uploaded!'
+								);
 							}}
 							onUploadError={(error: Error) => {
-								toast.error('Something went wrong, try again');
+								toast.error(`${error}`);
 							}}
 						/>
 						{/* {state?.errors?.['images']?.[0] && (
@@ -110,7 +116,7 @@ export function SellForm() {
 							}}
 							endpoint='productFileUpload'
 							onUploadError={(error: Error) => {
-								toast.error('Something went wrong, try again');
+								toast.error(`${error}`);
 							}}
 						/>
 						{/* {state?.errors?.['productFile']?.[0] && (
@@ -121,6 +127,9 @@ export function SellForm() {
 					</div>
 				</div>
 			</CardContent>
-		</CardHeader>
+			<CardFooter className='mt-5'>
+				<Button type='submit'>Submit</Button>
+			</CardFooter>
+		</form>
 	);
 }
