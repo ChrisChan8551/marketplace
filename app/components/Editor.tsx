@@ -104,6 +104,7 @@ export function TipTapEditor({
 		onUpdate: ({ editor }) => {
 			setJson(editor.getJSON());
 		},
+		immediatelyRender: false,
 	});
 
 	return (
