@@ -40,10 +40,10 @@ export async function SellProduct(prevState: any, formData: FormData) {
     const validateFields = productSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
-        price: Number(formData.get("price")),
+        price: Number(formData.get("price")), // convert string to number for validation
         smallDescription: formData.get("smallDescription"),
         description: formData.get("description"),
-        images: JSON.parse(formData.get("images") as string),
+        images: JSON.parse(formData.get("images") as string), //images are in an array of strings. need to add JSON.parse
         productFile: formData.get("productFile"),
     });
 
