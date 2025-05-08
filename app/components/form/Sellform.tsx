@@ -1,5 +1,6 @@
 'use client';
 
+import { SellProduct, type State } from '@/app/actions';
 import {
 	CardContent,
 	CardDescription,
@@ -18,9 +19,7 @@ import { SelectCategory } from '../SelectCategory';
 import { Textarea } from '@/components/ui/textarea';
 import { TipTapEditor } from '../Editor';
 import { UploadDropzone } from '@/app/lib/uploadthing';
-import { SellProduct, State } from '@/app/actions';
-import { Button } from '@/components/ui/button';
-// import { Submitbutton } from "../SubmitButtons";
+import { Submitbutton } from '../SubmitButtons';
 
 export function SellForm() {
 	const initalState: State = { message: '', status: undefined };
@@ -29,6 +28,14 @@ export function SellForm() {
 	const [images, setImages] = useState<null | string[]>(null);
 	const [productFile, SetProductFile] = useState<null | string>(null);
 
+	useEffect(() => {
+		if (state.status === 'success') {
+			toast.success(state.message);
+			redirect('/');
+		} else if (state.status === 'error') {
+			toast.error(state.message);
+		}
+	}, [state]);
 	return (
 		<form action={formAction}>
 			<CardHeader>
@@ -39,20 +46,21 @@ export function SellForm() {
 				</CardDescription>
 			</CardHeader>
 			<CardContent className='flex flex-col gap-y-10'>
-				<Label>Name</Label>
-				<Input
-					name='name'
-					type='text'
-					placeholder='Name of your Product'
-					// required
-					minLength={3}
-				/>
-				{state?.errors?.['name']?.[0] && (
-					<p className='text-destructive'>
-						{state?.errors?.['name']?.[0]}
-					</p>
-				)}
-
+				<div className='flex flex-col gap-y-2'>
+					<Label>Name</Label>
+					<Input
+						name='name'
+						type='text'
+						placeholder='Name of your Product'
+						required
+						minLength={3}
+					/>
+					{state?.errors?.['name']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['name']?.[0]}
+						</p>
+					)}
+				</div>
 				<div className='flex flex-col gap-y-2'>
 					<Label>Category</Label>
 					<SelectCategory />
@@ -62,13 +70,14 @@ export function SellForm() {
 						</p>
 					)}
 				</div>
+
 				<div className='flex flex-col gap-y-2'>
 					<Label>Price</Label>
 					<Input
 						placeholder='29$'
 						type='number'
 						name='price'
-						// required
+						required
 						min={1}
 					/>
 					{state?.errors?.['price']?.[0] && (
@@ -77,12 +86,13 @@ export function SellForm() {
 						</p>
 					)}
 				</div>
+
 				<div className='flex flex-col gap-y-2'>
 					<Label>Small Summary</Label>
 					<Textarea
 						name='smallDescription'
 						placeholder='Please describe your product shortly right here...'
-						// required
+						required
 						minLength={10}
 					/>
 					{state?.errors?.['smallDescription']?.[0] && (
@@ -91,8 +101,13 @@ export function SellForm() {
 						</p>
 					)}
 				</div>
+
 				<div className='flex flex-col gap-y-2'>
-					<input type='hidden' name='description' value={''} />
+					<input
+						type='hidden'
+						name='description'
+						value={JSON.stringify(json)}
+					/>
 					<Label>Description</Label>
 					<TipTapEditor json={json} setJson={setJson} />
 					{state?.errors?.['description']?.[0] && (
@@ -100,61 +115,60 @@ export function SellForm() {
 							{state?.errors?.['description']?.[0]}
 						</p>
 					)}
-					<div className='flex flex-col gap-y-2'>
-						<input
-							type='hidden'
-							name='images'
-							value={JSON.stringify(images)}
-						/>
-						<Label>Product Images</Label>
-						<UploadDropzone
-							endpoint='imageUploader'
-							onClientUploadComplete={(res) => {
-								setImages(res.map((item) => item.url));
-								toast.success(
-									'Your images have been uploaded!'
-								);
-							}}
-							onUploadError={(error: Error) => {
-								toast.error(`${error}`);
-							}}
-						/>
-						{state?.errors?.['images']?.[0] && (
-							<p className='text-destructive'>
-								{state?.errors?.['images']?.[0]}
-							</p>
-						)}
-					</div>
+				</div>
 
-					<div className='flex flex-col gap-y-2'>
-						<input
-							type='hidden'
-							name='productFile'
-							value={productFile ?? ''}
-						/>
-						<Label>Product File</Label>
-						<UploadDropzone
-							onClientUploadComplete={(res) => {
-								SetProductFile(res[0].url);
-								toast.success(
-									'Your Product file has been uploaded!'
-								);
-							}}
-							endpoint='productFileUpload'
-							onUploadError={(error: Error) => {
-								toast.error(`${error}`);
-							}}
-						/>
-						{state?.errors?.['productFile']?.[0] && (
-							<p className='text-destructive'>
-								{state?.errors?.['productFile']?.[0]}
-							</p>
-						)}
-					</div>
+				<div className='flex flex-col gap-y-2'>
+					<input
+						type='hidden'
+						name='images'
+						value={JSON.stringify(images)}
+					/>
+					<Label>Product Images</Label>
+					<UploadDropzone
+						endpoint='imageUploader'
+						onClientUploadComplete={(res) => {
+							setImages(res.map((item) => item.url));
+							toast.success('Your images have been uploaded');
+						}}
+						onUploadError={(error: Error) => {
+							toast.error('Something went wrong, try again');
+						}}
+					/>
+					{state?.errors?.['images']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['images']?.[0]}
+						</p>
+					)}
+				</div>
+
+				<div className='flex flex-col gap-y-2'>
+					<input
+						type='hidden'
+						name='productFile'
+						value={productFile ?? ''}
+					/>
+					<Label>Product File</Label>
+					<UploadDropzone
+						onClientUploadComplete={(res) => {
+							SetProductFile(res[0].url);
+							toast.success(
+								'Your Product file has been uploaded!'
+							);
+						}}
+						endpoint='productFileUpload'
+						onUploadError={(error: Error) => {
+							toast.error('Something went wrong, try again');
+						}}
+					/>
+					{state?.errors?.['productFile']?.[0] && (
+						<p className='text-destructive'>
+							{state?.errors?.['productFile']?.[0]}
+						</p>
+					)}
 				</div>
 			</CardContent>
 			<CardFooter className='mt-5'>
-				<Button type='submit'>Submit</Button>
+				<Submitbutton title='Create your Product' />
 			</CardFooter>
 		</form>
 	);

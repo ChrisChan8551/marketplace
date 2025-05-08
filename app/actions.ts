@@ -56,4 +56,25 @@ export async function SellProduct(prevState: any, formData: FormData) {
 
         return state;
     }
+    
+    const data = await prisma.product.create({
+        data: {
+            name: validateFields.data.name,
+            category: validateFields.data.category as CategoryTypes,
+            smallDescription: validateFields.data.smallDescription,
+            price: validateFields.data.price,
+            images: validateFields.data.images,
+            productFile: validateFields.data.productFile,
+            userId: user.id,
+            description: JSON.parse(validateFields.data.description),
+        },
+    });
+
+    const state: State = {
+        status: "success",
+        message: "Your Product has been created",
+    };
+
+    return state;
+
 }

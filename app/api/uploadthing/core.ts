@@ -29,18 +29,26 @@ export const ourFileRouter = {
             return { uploadedBy: metadata.userId };
         }),
 
-    productFileUpload: f({ "application/zip": { maxFileCount: 1 } })
-        // Set permissions and file types for this FileRoute
-        .middleware(async ({ req }) => {
-            const { getUser } = getKindeServerSession();
-            const user = await getUser();
+    productFileUpload: f({
+        blob: {
+            maxFileSize: "4MB",
+            maxFileCount: 1
+        }
+    }).middleware(async ({ req, files }) => {
+        // Only allow ZIP files
+        if (files.some(file => !file.name.endsWith('.zip'))) {
+            throw new UploadThingError("Only ZIP files are allowed");
+        }
 
-            // If you throw, the user will not be able to upload
-            if (!user) throw new UploadThingError("Unauthorized");
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
 
-            // Whatever is returned here is accessible in onUploadComplete as `metadata`
-            return { userId: user.id };
-        })
+        // If you throw, the user will not be able to upload
+        if (!user) throw new UploadThingError("Unauthorized");
+
+        // Whatever is returned here is accessible in onUploadComplete as `metadata`
+        return { userId: user.id };
+    })
         .onUploadComplete(async ({ metadata, file }) => {
             // This code RUNS ON YOUR SERVER after upload
             console.log("Upload complete for userId:", metadata.userId);
