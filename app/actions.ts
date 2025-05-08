@@ -56,7 +56,7 @@ export async function SellProduct(prevState: any, formData: FormData) {
 
         return state;
     }
-    
+
     const data = await prisma.product.create({
         data: {
             name: validateFields.data.name,
@@ -78,3 +78,4 @@ export async function SellProduct(prevState: any, formData: FormData) {
     return state;
 
 }
+
