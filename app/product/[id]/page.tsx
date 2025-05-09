@@ -1,5 +1,5 @@
 // import { BuyProduct } from '@/app/actions';
-// import { ProductDescription } from '@/app/components/ProductDescription';
+import { ProductDescription } from '@/app/components/ProductDescription';
 // import { BuyButton } from '@/app/components/SubmitButtons';
 import prisma from '@/app/lib/db';
 import { Button } from '@/components/ui/button';
@@ -108,11 +108,12 @@ export default async function ProductPage({
 				<div className='border-t border-gray-200 mt-10'></div>
 			</div>
 
-			{/* <div className='w-full max-w-2xl mx-auto mt-16 lg:max-w-none lg:mt-0 lg:col-span-4'>
+			<div className='w-full max-w-2xl mx-auto mt-16 lg:max-w-none lg:mt-0 lg:col-span-4'>
+                Description:
 				<ProductDescription
 					content={data?.description as JSONContent}
 				/>
-			</div> */}
+			</div>
 		</section>
 	);
 }
