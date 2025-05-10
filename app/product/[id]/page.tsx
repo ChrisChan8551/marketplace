@@ -15,6 +15,19 @@ import {
 import { JSONContent } from '@tiptap/react';
 import Image from 'next/image';
 
+function getDisplayTitle(category: string): string {
+	switch (category) {
+		case 'uikit':
+			return 'UI Kit';
+		case 'template':
+			return 'Template';
+		case 'icon':
+			return 'Icon';
+		default:
+			return category;
+	}
+}
+
 async function getData(id: string) {
 	const data = await prisma.product.findUnique({
 		where: {
@@ -77,7 +90,7 @@ export default async function ProductPage({
 					{data?.smallDescription}
 				</p>
 				<Button size='lg' className='w-full mt-10'>
-					Buy for {data?.price}
+					Buy for ${data?.price}
 				</Button>
 				{/* <form action={BuyProduct}>
 					<input type='hidden' name='id' value={data?.id} />
@@ -100,7 +113,7 @@ export default async function ProductPage({
 						</h3>
 
 						<h3 className='text-sm font-medium col-span-1'>
-							{data?.category}
+							{getDisplayTitle(data?.category as string)}
 						</h3>
 					</div>
 				</div>
