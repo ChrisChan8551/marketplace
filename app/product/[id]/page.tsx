@@ -109,7 +109,7 @@ export default async function ProductPage({
 			</div>
 
 			<div className='w-full max-w-2xl mx-auto mt-16 lg:max-w-none lg:mt-0 lg:col-span-4'>
-                Description:
+				Description:
 				<ProductDescription
 					content={data?.description as JSONContent}
 				/>
