@@ -127,7 +127,7 @@ async function LoadRows({ category }: iAppProps) {
 				</Link>
 			</div>
 
-			<div className='grid gird-cols-1 lg:grid-cols-3 sm:grid-cols-2 mt-4 gap-10'>
+			<div className='grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 mt-4 gap-10'>
 				{data.data.map((product) => (
 					<ProductCard
 						images={product.images}
