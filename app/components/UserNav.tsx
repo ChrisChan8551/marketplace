@@ -62,7 +62,7 @@ export function UserNav({ email, name, userImage }: iAppProps) {
 				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem asChild>
-					<LogoutLink>Log out</LogoutLink>
+					<LogoutLink>Log Out</LogoutLink>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
