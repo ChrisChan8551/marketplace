@@ -4,6 +4,21 @@ import { type CategoryTypes } from '@prisma/client';
 import { notFound } from 'next/navigation';
 import { unstable_noStore as noStore } from 'next/cache';
 
+function getDisplayTitle(category: string): string {
+	switch (category) {
+		case 'uikit':
+			return 'UI Kits';
+		case 'template':
+			return 'Templates';
+		case 'icon':
+			return 'Icons';
+		case 'all':
+			return 'Newest Products';
+		default:
+			return category;
+	}
+}
+
 async function getData(category: string) {
 	let input;
 
@@ -54,6 +69,9 @@ export default async function CategoryPage({
 	const data = await getData(params.category);
 	return (
 		<section className='max-w-7xl mx-auto px-4 md:px-8'>
+			<h1 className='text-2xl font-bold'>
+				{getDisplayTitle(params.category)}
+			</h1>
 			<div className='grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-10 mt-4'>
 				{data.map((product) => (
 					<ProductCard
