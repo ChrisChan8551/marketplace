@@ -38,7 +38,7 @@ export default async function MyProductsRoute() {
 			{data.length === 0 ? (
 				<div className='mt-8 text-center'>
 					<p className='text-gray-600 mb-4'>
-						You haven't added any products yet.
+						You haven&apos;t added any products yet.
 					</p>
 					<Link
 						href='/sell'
