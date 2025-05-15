@@ -9,12 +9,15 @@ datasource db {
 }
 
 model User {
-    id           String    @id @unique
-    email        String
-    firstName    String
-    lastName     String
-    profileImage String
-    Product      Product[] // '[]' means one to many relation
+    id                    String  @id @unique
+    email                 String
+    firstName             String
+    lastName              String
+    profileImage          String
+    connectedAccountId    String  @unique
+    stripeConnectedLinked Boolean @default(false)
+
+    Product Product[]
 }
 
 model Product {
