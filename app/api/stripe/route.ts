@@ -1,4 +1,4 @@
-// // import ProductEmail from "@/app/components/ProductEmail";
+import ProductEmail from "@/app/components/ProductEmail";
 import { stripe } from "@/app/lib/stripe";
 import { headers } from "next/headers";
 import { Resend } from "resend";
@@ -27,15 +27,15 @@ export async function POST(req: Request) {
             const session = event.data.object;
             const link = session.metadata?.link;
 
-            // Note: You'll need to implement ProductEmail component
-            // const { data, error } = await resend.emails.send({
-            //     from: "MarshalUI <onboarding@resend.dev>",
-            //     to: ["your_email"],
-            //     subject: "Your Product from MarshalUI",
-            //     react: ProductEmail({
-            //         link: link as string,
-            //     }),
-            // });
+            // Note: You'll need to implement ProductEmail component//
+            const { data, error } = await resend.emails.send({
+                from: "Digital Marketplace <onboarding@resend.dev>",
+                to: ["your_email"],
+                subject: "Your Product from Digital Marketplace",
+                react: ProductEmail({
+                    link: link as string,
+                }),
+            });
 
             break;
         }
