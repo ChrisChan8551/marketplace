@@ -1,4 +1,3 @@
-import ProductEmail from "@/app/components/ProductEmail";
 import { stripe } from "@/app/lib/stripe";
 import { headers } from "next/headers";
 import { Resend } from "resend";
