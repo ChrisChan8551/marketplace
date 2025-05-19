@@ -28,8 +28,8 @@ export async function POST(req: Request) {
 
             const link = session.metadata?.link;
 
-            // Generate email HTML using the utility function
-            const html = await generateProductEmail(link as string);
+            // Using plain HTML template without React components
+            const html = generateProductEmail(link as string);
 
             const { data, error } = await resend.emails.send({
                 from: "Digital Marketplace <onboarding@resend.dev>",
