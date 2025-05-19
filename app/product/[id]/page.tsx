@@ -53,14 +53,17 @@ async function getData(id: string) {
 	return data;
 }
 
+type Params = Promise<{ id: string }>;
+
 export default async function ProductPage({
 	params,
 }: {
-	params: { id: string };
+	params: Params;
 }) {
 	// prevent caching of the page
 	noStore();
-	const data = await getData(params.id);
+	const { id } = await params;
+	const data = await getData(id);
 	return (
 		<section className='mx-auto px-4  lg:mt-10 max-w-7xl lg:px-8 lg:grid lg:grid-rows-1 lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16'>
 			<Carousel className=' lg:row-end-1 lg:col-span-4'>
