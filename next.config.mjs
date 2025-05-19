@@ -9,35 +9,6 @@ const nextConfig = {
 			},
 		],
 	},
-	experimental: {
-		serverComponentsExternalPackages: ["resend"],
-		serverActions: {
-			bodySizeLimit: '2mb',
-		},
-		optimizePackageImports: [
-			'@radix-ui/react-icons',
-			'lucide-react',
-			'sonner'
-		],
-	},
-	webpack: (config, { isServer }) => {
-		// This is to handle the ReactCurrentDispatcher issue
-		config.resolve.alias = {
-			...config.resolve.alias,
-			// Avoid React dependency in server components
-			"react/jsx-runtime.js": "next/dist/compiled/react/jsx-runtime",
-			"react/jsx-dev-runtime.js": "next/dist/compiled/react/jsx-dev-runtime",
-			react: "next/dist/compiled/react",
-			"react-dom": "next/dist/compiled/react-dom",
-		};
-
-		// Prevent server-side React hooks errors
-		if (isServer) {
-			config.externals = [...config.externals, 'react', 'react-dom'];
-		}
-
-		return config;
-	},
 };
 
 export default nextConfig;

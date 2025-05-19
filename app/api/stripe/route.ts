@@ -1,6 +1,10 @@
+import ProductEmail from "@/app/components/ProductEmail";
 import { stripe } from "@/app/lib/stripe";
-import { sendProductEmail } from "@/app/lib/send-email";
+
 import { headers } from "next/headers";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -25,19 +29,14 @@ export async function POST(req: Request) {
 
             const link = session.metadata?.link;
 
-            try {
-                const result = await sendProductEmail({
-                    to: ["your_email"],
-                    subject: "Your Product from Digit",
+            const { data, error } = await resend.emails.send({
+                from: "Digital Marketplace <onboarding@resend.dev>",
+                to: ["your_email"],
+                subject: "Your Product from Digit",
+                react: ProductEmail({
                     link: link as string,
-                });
-
-                if (!result.success) {
-                    console.error("Email sending failed:", result.error);
-                }
-            } catch (emailError) {
-                console.error("Failed to send email:", emailError);
-            }
+                }),
+            });
 
             break;
         }

@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
-		"build": "NEXT_DISABLE_SOURCEMAPS=1 next build",
+		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
 		"postinstall": "prisma generate"
@@ -19,7 +19,7 @@
 		"@radix-ui/react-slot": "^1.2.2",
 		"@radix-ui/react-toast": "^1.2.13",
 		"@radix-ui/themes": "^3.2.1",
-
+		"@react-email/components": "^0.0.17",
 		"@stripe/stripe-js": "^7.3.0",
 		"@tiptap/pm": "^2.12.0",
 		"@tiptap/react": "^2.12.0",
@@ -33,7 +33,7 @@
 		"next-themes": "^0.3.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1",
-		"resend": "^3.0.0",
+		"resend": "^3.5.0",
 		"sonner": "^1.7.4",
 		"stripe": "^15.12.0",
 		"tailwind-merge": "^2.3.0",
