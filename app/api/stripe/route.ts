@@ -31,8 +31,8 @@ export async function POST(req: Request) {
 
             const { data, error } = await resend.emails.send({
                 from: "Digital Marketplace <onboarding@resend.dev>",
-                to: ["your_email"],
-                subject: "Your Product from Digit",
+                to: [process.env.RESEND_EMAIL as string],
+                subject: "Your Product from Digital Marketplace",
                 react: ProductEmail({
                     link: link as string,
                 }),
