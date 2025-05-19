@@ -18,9 +18,7 @@ export default function ProductEmail({ link }: { link: string }) {
 			<Tailwind>
 				<Body className='bg-white font-sans'>
 					<Container style={container}>
-						<Text className='text-2xl font-semibold'>
-							Hi Friend,
-						</Text>
+						<Text className='text-2xl font-semibold'>Hi,</Text>
 						<Text className='text-lg text-gray-600'>
 							Thank you for buying your product at Digital
 							Marketplace

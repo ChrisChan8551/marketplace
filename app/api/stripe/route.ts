@@ -2,9 +2,9 @@ import ProductEmail from "@/app/components/ProductEmail";
 import { stripe } from "@/app/lib/stripe";
 
 import { headers } from "next/headers";
-// import { Resend } from "resend";
+import { Resend } from "resend";
 
-// const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         event = stripe.webhooks.constructEvent(
             body,
             signature,
-            process.env.STRIPE_CONNECT_WEBHOOK_SECRET as string
+            process.env.STRIPE_SECRET_WEBHOOK as string
         );
     } catch (error: unknown) {
         return new Response("webhook error", { status: 400 });
@@ -29,14 +29,14 @@ export async function POST(req: Request) {
 
             const link = session.metadata?.link;
 
-            // const { data, error } = await resend.emails.send({
-            //     from: "MarshalUI <onboarding@resend.dev>",
-            //     to: ["your_email"],
-            //     subject: "Your Product from MarshalUI",
-            //     react: ProductEmail({
-            //         link: link as string,
-            //     }),
-            // });
+            const { data, error } = await resend.emails.send({
+                from: "Digital Marketplace <onboarding@resend.dev>",
+                to: [process.env.RESEND_EMAIL as string],
+                subject: "Your Product from Digital Marketplace",
+                react: ProductEmail({
+                    link: link as string,
+                }),
+            });
 
             break;
         }
