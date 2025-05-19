@@ -1,5 +1,3 @@
-'use client';
-
 import {
 	Body,
 	Button,
@@ -11,9 +9,7 @@ import {
 	Tailwind,
 	Text,
 } from '@react-email/components';
-import React from 'react';
 
-// Mark this component as a Client Component
 export default function ProductEmail({ link }: { link: string }) {
 	return (
 		<Html>
