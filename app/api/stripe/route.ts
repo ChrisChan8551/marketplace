@@ -6,6 +6,11 @@ import ProductEmail from "@/app/components/ProductEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Move the React email rendering logic to a separate function
+async function generateProductEmail(link: string) {
+    return await renderAsync(ProductEmail({ link }));
+}
+
 export async function POST(req: Request) {
     const body = await req.text();
 
@@ -29,13 +34,12 @@ export async function POST(req: Request) {
 
             const link = session.metadata?.link;
 
-            const html = await renderAsync(ProductEmail({
-                link: link as string,
-            }));
+            // Generate email HTML outside of the main API route logic
+            const html = await generateProductEmail(link as string);
 
             const { data, error } = await resend.emails.send({
                 from: "Digital Marketplace <onboarding@resend.dev>",
-                to: process.env.RESEND_EMAIL as string,
+                to: [process.env.RESEND_EMAIL as string],
                 subject: "Your Product from Digital Marketplace",
                 html: html,
             });
