@@ -58,6 +58,7 @@ export default async function ProductPage({
 }: {
 	params: { id: string };
 }) {
+	// prevent caching of the page
 	noStore();
 	const data = await getData(params.id);
 	return (

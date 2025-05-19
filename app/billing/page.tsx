@@ -26,6 +26,7 @@ async function getData(userId: string) {
 }
 
 export default async function BillingRoute() {
+	// prevent caching of the page
 	noStore();
 	const { getUser } = getKindeServerSession();
 	const user = await getUser();

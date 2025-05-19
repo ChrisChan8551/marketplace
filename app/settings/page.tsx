@@ -21,6 +21,7 @@ async function getData(userId: string) {
 }
 
 export default async function SetttingsPage() {
+	// prevent caching of the page
 	noStore();
 	const { getUser } = getKindeServerSession();
 	const user = await getUser();
@@ -29,10 +30,8 @@ export default async function SetttingsPage() {
 	}
 
 	const data = await getData(user.id);
-
 	return (
 		<section className='max-w-7xl mx-auto px-4 md:px-8'>
-			Settings Page
 			<Card>
 				<SettingsForm
 					firstName={data?.firstName as string}
