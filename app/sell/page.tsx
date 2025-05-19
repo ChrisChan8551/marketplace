@@ -11,14 +11,14 @@ async function getData(userId: string) {
 		where: {
 			id: userId,
 		},
-		// select: {
-		// 	stripeConnectedLinked: true,
-		// },
+		select: {
+			stripeConnectedLinked: true,
+		},
 	});
 
-	// if (data?.stripeConnectedLinked === false) {
-	// 	return redirect('/billing');
-	// }
+	if (data?.stripeConnectedLinked === false) {
+		return redirect('/billing');
+	}
 
 	return null;
 }

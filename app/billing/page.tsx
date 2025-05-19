@@ -42,7 +42,6 @@ export default async function BillingRoute() {
 					<CardTitle>Billing</CardTitle>
 					<CardDescription>Payment details</CardDescription>
 				</CardHeader>
-
 				<CardContent>
 					{data?.stripeConnectedLinked === false && (
 						<form action={CreateStripeAccountLink}>

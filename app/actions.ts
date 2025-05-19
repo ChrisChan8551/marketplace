@@ -3,9 +3,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { ZodStringDef, z } from "zod";
 import prisma from "./lib/db";
 import { type CategoryTypes } from "@prisma/client";
-// import { stripe } from "./lib/stripe";
-import { redirect } from "next/navigation";
 import { stripe } from "./lib/stripe";
+import { redirect } from "next/navigation";
 
 export type State = {
     status: "error" | "success" | undefined;
@@ -24,7 +23,7 @@ const productSchema = z.object({
     smallDescription: z
         .string()
         .min(10, { message: "Minimum 10 characters required" }),
-    description: z.string().min(10, { message: "Minimum 10 characters required" }),
+    description: z.string().min(10, { message: "Description is required" }),
     images: z.array(z.string(), { message: "Images are required" }),
     productFile: z
         .string()
@@ -50,8 +49,9 @@ export async function SellProduct(prevState: any, formData: FormData) {
     const user = await getUser();
 
     if (!user) {
-        throw new Error("user not found");
+        throw new Error("User not found");
     }
+
     const validateFields = productSchema.safeParse({
         name: formData.get("name"),
         category: formData.get("category"),
@@ -85,13 +85,7 @@ export async function SellProduct(prevState: any, formData: FormData) {
         },
     });
 
-    const state: State = {
-        status: "success",
-        message: "Your Product has been created",
-    };
-
-    return state;
-
+    return redirect(`/product/${data.id}`);
 }
 
 export async function UpdateUserSettings(prevState: any, formData: FormData) {
@@ -146,7 +140,12 @@ export async function BuyProduct(formData: FormData) {
             smallDescription: true,
             price: true,
             images: true,
-
+            productFile: true,
+            User: {
+                select: {
+                    connectedAccountId: true,
+                },
+            },
         },
     });
 
@@ -167,13 +166,21 @@ export async function BuyProduct(formData: FormData) {
                 quantity: 1,
             },
         ],
-        success_url: "http://localhost:3000/payment/success",
-        cancel_url: "http://localhost:3000/payment/cancel"
+        metadata: {
+            link: data?.productFile as string,
+        },
 
+        payment_intent_data: {
+            application_fee_amount: Math.round((data?.price as number) * 100) * 0.1,
+            transfer_data: {
+                destination: data?.User?.connectedAccountId as string,
+            },
+        },
+        success_url: "http://localhost:3000/payment/success",
+        cancel_url: "http://localhost:3000/payment/cancel",
     });
 
     return redirect(session.url as string);
-
 }
 
 export async function CreateStripeAccountLink() {
@@ -196,10 +203,9 @@ export async function CreateStripeAccountLink() {
 
     const accountLink = await stripe.accountLinks.create({
         account: data?.connectedAccountId as string,
-        refresh_url:
-            `http://localhost:3000/billing`,
-        return_url:
-            `http://localhost:3000/return/${data?.connectedAccountId}`,
+        refresh_url: `http://localhost:3000/billing`,
+        return_url: `http://localhost:3000/return/${data?.connectedAccountId}`,
+
         type: "account_onboarding",
     });
 
