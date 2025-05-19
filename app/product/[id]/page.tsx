@@ -55,11 +55,7 @@ async function getData(id: string) {
 
 type Params = Promise<{ id: string }>;
 
-export default async function ProductPage({
-	params,
-}: {
-	params: Params;
-}) {
+export default async function ProductPage({ params }: { params: Params }) {
 	// prevent caching of the page
 	noStore();
 	const { id } = await params;

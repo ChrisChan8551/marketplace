@@ -60,17 +60,20 @@ async function getData(category: string) {
 	return data;
 }
 
+type Params = Promise<{ category: string }>;
+
 export default async function CategoryPage({
 	params,
 }: {
-	params: { category: string };
+	params: Params;
 }) {
 	noStore();
-	const data = await getData(params.category);
+	const { category } = await params;
+	const data = await getData(category);
 	return (
 		<section className='max-w-7xl mx-auto px-4 md:px-8'>
 			<h1 className='text-2xl font-bold'>
-				{getDisplayTitle(params.category)}
+				{getDisplayTitle(category)}
 			</h1>
 			<div className='grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 gap-10 mt-4'>
 				{data.map((product) => (
