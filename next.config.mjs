@@ -20,7 +20,7 @@ const nextConfig = {
 			'sonner'
 		],
 	},
-	webpack: (config) => {
+	webpack: (config, { isServer }) => {
 		// This is to handle the ReactCurrentDispatcher issue
 		config.resolve.alias = {
 			...config.resolve.alias,
@@ -30,6 +30,11 @@ const nextConfig = {
 			react: "next/dist/compiled/react",
 			"react-dom": "next/dist/compiled/react-dom",
 		};
+
+		// Prevent server-side React hooks errors
+		if (isServer) {
+			config.externals = [...config.externals, 'react', 'react-dom'];
+		}
 
 		return config;
 	},
