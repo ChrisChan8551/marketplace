@@ -11,6 +11,14 @@ const nextConfig = {
 	},
 	experimental: {
 		serverComponentsExternalPackages: ["resend"],
+		serverActions: {
+			bodySizeLimit: '2mb',
+		},
+		optimizePackageImports: [
+			'@radix-ui/react-icons',
+			'lucide-react',
+			'sonner'
+		],
 	},
 	webpack: (config) => {
 		// This is to handle the ReactCurrentDispatcher issue
