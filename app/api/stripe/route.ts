@@ -1,15 +1,9 @@
 import { stripe } from "@/app/lib/stripe";
 import { headers } from "next/headers";
 import { Resend } from "resend";
-import { renderAsync } from "@react-email/components";
-import ProductEmail from "@/app/components/ProductEmail";
+import { generateProductEmail } from "@/app/lib/email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Move the React email rendering logic to a separate function
-async function generateProductEmail(link: string) {
-    return await renderAsync(ProductEmail({ link }));
-}
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -34,7 +28,7 @@ export async function POST(req: Request) {
 
             const link = session.metadata?.link;
 
-            // Generate email HTML outside of the main API route logic
+            // Generate email HTML using the utility function
             const html = await generateProductEmail(link as string);
 
             const { data, error } = await resend.emails.send({
