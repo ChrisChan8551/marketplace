@@ -149,13 +149,18 @@ export async function BuyProduct(formData: FormData) {
         },
     });
 
+    if (!data?.productFile) {
+        throw new Error("Product file not found");
+    }
+
+    console.log(`Setting product link in metadata: ${data.productFile}`);
+
     const session = await stripe.checkout.sessions.create({
         mode: "payment",
         line_items: [
             {
                 price_data: {
                     currency: "usd",
-                    // stripe uses cents for pricing so 4500 = 45.00
                     unit_amount: Math.round((data?.price as number) * 100),
                     product_data: {
                         name: data?.name as string,
@@ -167,7 +172,8 @@ export async function BuyProduct(formData: FormData) {
             },
         ],
         metadata: {
-            link: data?.productFile as string,
+            link: data.productFile,
+            product_id: id
         },
 
         payment_intent_data: {
@@ -185,6 +191,8 @@ export async function BuyProduct(formData: FormData) {
                 ? "http://localhost:3000/payment/cancel"
                 : "https://ccdigitalmarketplace.vercel.app/payment/cancel",
     });
+
+    console.log(`Created checkout session: ${session.id}`);
 
     return redirect(session.url as string);
 }
