@@ -2,24 +2,7 @@ import { stripe } from "@/app/lib/stripe";
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import Stripe from 'stripe';
-import { renderToHtml as renderProductEmail } from "@/app/components/SimpleProductEmail";
-
-// Define the session type to fix TypeScript error
-interface CheckoutSession {
-    id: string;
-    metadata?: Record<string, string> | null;
-    customer_details?: {
-        email?: string;
-    };
-    line_items?: {
-        data?: Array<{
-            price?: {
-                product?: any; // Use any to avoid TypeScript errors
-            };
-        }>;
-    };
-    [key: string]: any; // Allow indexing with string
-}
+import { handleCheckoutComplete, type CheckoutSession } from "@/app/lib/email";
 
 const apiKey = process.env.RESEND_API_KEY;
 const resend = new Resend(apiKey);
@@ -118,83 +101,5 @@ export async function POST(req: Request) {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
-    }
-}
-
-// Export the function so it can be used by the simulation endpoint
-export async function handleCheckoutComplete(session: CheckoutSession) {
-    console.log('====== HANDLING CHECKOUT COMPLETE ======');
-    console.log('Session ID:', session.id);
-
-    // Try to get the link from different possible locations
-    let link = session.metadata?.link;
-
-    // If not found in primary location, try alternate locations
-    if (!link) {
-        if (session.metadata?.download_link) {
-            link = session.metadata.download_link;
-            console.log('Found download_link in metadata');
-        } else if (session.metadata?.product_link) {
-            link = session.metadata.product_link;
-            console.log('Found product_link in metadata');
-        } else if (session.line_items?.data?.[0]?.price?.product?.metadata?.link) {
-            link = session.line_items.data[0].price.product.metadata.link;
-            console.log('Found link in line item product metadata');
-        } else {
-            // Try to find link in other session properties
-            for (const key in session) {
-                const value = session[key];
-                if (typeof value === 'string' && value.startsWith('http')) {
-                    console.log(`Found possible link in session.${key}:`, value);
-                    if (!link) link = value;
-                }
-            }
-        }
-    } else {
-        console.log('Found link directly in metadata');
-    }
-
-    // If still no link, use a fallback
-    if (!link) {
-        console.error('⚠️ NO PRODUCT LINK FOUND IN SESSION');
-        return {
-            error: "No product link found in session",
-            success: false
-        };
-    }
-
-    console.log('Using product link:', link);
-
-    try {
-        console.log('Starting email send process...');
-
-        // Generate HTML directly using our template function
-        const emailHtml = renderProductEmail({ link });
-
-        // Get customer email from session if available
-        const customerEmail = session.customer_details?.email || 'chrischan8551@gmail.com';
-        console.log('Sending email to:', customerEmail);
-
-        const emailResult = await resend.emails.send({
-            from: "Digital Marketplace <onboarding@resend.dev>",
-            to: 'chrischan8551@gmail.com',
-            subject: "Your Product from Digital Marketplace",
-            html: emailHtml
-        });
-
-        if (emailResult.error) {
-            console.error('Email sending failed:', emailResult.error);
-            return { error: emailResult.error, success: false };
-        }
-
-        console.log('Email sent successfully:', emailResult.data);
-        return { success: true, data: emailResult.data };
-    } catch (emailError) {
-        console.error('Error sending email:', emailError);
-        return {
-            error: "Email sending failed",
-            details: emailError instanceof Error ? emailError.message : String(emailError),
-            success: false
-        };
     }
 }
